@@ -1,0 +1,578 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "API to return and create PDVs (Ponto de Venda)",
+		"version": "1.0.0",
+		"title": "ZX Ventures - Back-end challenge",
+		"contact": {
+			"email": "caiik@live.com",
+			"name": "Carlos Henrique Severino"
+		},
+		"x-logo": {
+			"url": "resources/logo.png"
+		}
+	},
+	"host": "localhost:9000",
+	"tags": [
+		{
+			"name": "PDV",
+			"description": "PDVs endpoints"
+		}
+	],
+	"schemes": ["http"],
+	"paths": {
+		"/pdv": {
+			"get": {
+				"tags": ["PDV"],
+				"summary": "Get all PDVs",
+				"description": "",
+				"operationId": "getPDVs",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "offset",
+						"type": "integer",
+						"description":
+							"The number of PDVs to skip before starting to collect the result set"
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"type": "integer",
+						"description": "The numbers of PDVs to return"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "All right",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"statusCode": {
+									"$ref": "#/definitions/StatusCode"
+								},
+								"qty": {
+									"title": "Quantity of itens",
+									"type": "integer",
+									"description":
+										"The total quantity of itens",
+									"example": 350
+								},
+								"itens": {
+									"type": "array",
+									"title": "Itens",
+									"description": "Itens",
+									"items": {
+										"$ref": "#/definitions/PDV"
+									}
+								},
+								"links": {
+									"type": "array",
+									"title": "Resources",
+									"description": "Available resources",
+									"items": {
+										"$ref": "#/definitions/Resource"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["PDV"],
+				"summary": "Add a new PDV",
+				"description": "",
+				"operationId": "addPDV",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"description": "PDV object that needs to be added",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/PDVAdd"
+						}
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "PDV created",
+						"schema": {
+							"$ref": "#/definitions/PDVReturn"
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"schema": {
+							"$ref": "#/definitions/Error400InvalidInput"
+						}
+					}
+				}
+			}
+		},
+		"/pdv/{pdvId}": {
+			"get": {
+				"tags": ["PDV"],
+				"summary": "Find a PDV by Id",
+				"description": "Returns a single PDV",
+				"operationId": "getPDVById",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "pdvId",
+						"in": "path",
+						"description": "Id of PDV to return",
+						"required": true,
+						"type": "integer"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "PDV returned",
+						"schema": {
+							"$ref": "#/definitions/PDVReturn"
+						}
+					},
+					"400": {
+						"description": "Invalid Id supplied",
+						"schema": {
+							"$ref": "#/definitions/Error400InvalidId"
+						},
+						"examples": {
+							"example1": {
+								"statusCode": 400,
+								"error": "Invalid Input",
+								"message": "Supplied Id invalid"
+							}
+						}
+					},
+					"404": {
+						"description": "PDV not found",
+						"schema": {
+							"$ref": "#/definitions/Error404Id"
+						}
+					}
+				}
+			}
+		},
+		"/pdv/{pdvLng},{pdvLat}": {
+			"get": {
+				"tags": ["PDV"],
+				"summary": "Search the nearest PDV of the supplied location",
+				"description": "Returns a single PDV (if exist)",
+				"operationId": "searchPDV",
+				"produces": ["application/json"],
+				"parameters": [
+					{
+						"name": "pdvLng",
+						"in": "path",
+						"description": "Location Longitude",
+						"required": true,
+						"type": "number"
+					},
+					{
+						"name": "pdvLat",
+						"in": "path",
+						"description": "Location Latitude",
+						"required": true,
+						"type": "number"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "PDV returned",
+						"schema": {
+							"$ref": "#/definitions/PDVReturn"
+						}
+					},
+					"400": {
+						"description": "Invalid Id supplied",
+						"schema": {
+							"$ref": "#/definitions/Error401LngLat"
+						}
+					},
+					"404": {
+						"description": "PDV not found",
+						"schema": {
+							"$ref": "#/definitions/Error404LngLat"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PDV": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"title": "PDV Id",
+					"description": "Id of the PDV"
+				},
+				"tradingName": {
+					"type": "string",
+					"title": "PDV trading name",
+					"description": "Name of the establishment"
+				},
+				"ownerName": {
+					"type": "string",
+					"title": "PDV owner name",
+					"description": "Name of the establishment owner"
+				},
+				"document": {
+					"type": "string",
+					"format": "CPF/CNPJ",
+					"title": "PDV document",
+					"description": "Document of the establishment"
+				},
+				"coverageArea": {
+					"type": "object",
+					"title": "PDV coverage area",
+					"description": "Coverage area of the establishment",
+					"properties": {
+						"type": {
+							"type": "string"
+						},
+						"coordinates": {
+							"title": "Coordinates",
+							"description": "Coordinates",
+							"type": "array",
+							"minLength": 2,
+							"maxLength": 2,
+							"items": {
+								"type": "array",
+								"minLength": 1,
+								"maxLength": 1,
+								"items": {
+									"type": "array",
+									"minLength": 3,
+									"items": {
+										"type": "array",
+										"minLength": 2,
+										"maxLength": 2,
+										"items": {
+											"type": "number"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"address": {
+					"type": "object",
+					"title": "PDV adress",
+					"description": "Adress of the establishment",
+					"properties": {
+						"type": {
+							"type": "string"
+						},
+						"coordinates": {
+							"title": "Coordinates",
+							"description": "Coordinates",
+							"type": "array",
+							"items": {
+								"type": "number",
+								"minLength": 2,
+								"maxLength": 2
+							}
+						}
+					}
+				}
+			},
+			"example": {
+				"id": 1,
+				"tradingName": "Adega da Cerveja - Pinheiros",
+				"ownerName": "Zé da Silva",
+				"document": "1432132123891/0001",
+				"coverageArea": {
+					"type": "MultiPolygon",
+					"coordinates": [
+						[[[30, 20], [45, 40], [10, 40], [30, 20]]],
+						[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+					]
+				},
+				"address": {
+					"type": "Point",
+					"coordinates": ["-46.57421", "-21.785741"]
+				}
+			}
+		},
+		"PDVAdd": {
+			"type": "object",
+			"properties": {
+				"tradingName": {
+					"type": "string",
+					"title": "PDV trading name",
+					"description": "Name of the establishment"
+				},
+				"ownerName": {
+					"type": "string",
+					"title": "PDV owner name",
+					"description": "Name of the establishment owner"
+				},
+				"document": {
+					"type": "string",
+					"format": "CPF/CNPJ",
+					"title": "PDV document",
+					"description": "Document of the establishment"
+				},
+				"coverageArea": {
+					"type": "object",
+					"title": "PDV coverage area",
+					"description": "Coverage area of the establishment",
+					"properties": {
+						"type": {
+							"type": "string"
+						},
+						"coordinates": {
+							"title": "Coordinates",
+							"description": "Coordinates",
+							"type": "array",
+							"minLength": 2,
+							"maxLength": 2,
+							"items": {
+								"type": "array",
+								"minLength": 1,
+								"maxLength": 1,
+								"items": {
+									"type": "array",
+									"minLength": 3,
+									"items": {
+										"type": "array",
+										"minLength": 2,
+										"maxLength": 2,
+										"items": {
+											"type": "number"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"address": {
+					"type": "object",
+					"title": "PDV adress",
+					"description": "Adress of the establishment",
+					"properties": {
+						"type": {
+							"type": "string"
+						},
+						"coordinates": {
+							"title": "Coordinates",
+							"description": "Coordinates",
+							"type": "array",
+							"items": {
+								"type": "number",
+								"minLength": 2,
+								"maxLength": 2
+							}
+						}
+					}
+				}
+			},
+			"example": {
+				"tradingName": "Adega da Cerveja - Pinheiros",
+				"ownerName": "Zé da Silva",
+				"document": "1432132123891/0001",
+				"coverageArea": {
+					"type": "MultiPolygon",
+					"coordinates": [
+						[[[30, 20], [45, 40], [10, 40], [30, 20]]],
+						[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+					]
+				},
+				"address": {
+					"type": "Point",
+					"coordinates": [-46.57421, -21.785741]
+				}
+			}
+		},
+		"PDVReturn": {
+			"type": "object",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"item": {
+					"$ref": "#/definitions/PDV"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
+				}
+			}
+		},
+		"StatusCode": {
+			"type": "integer",
+			"enum": [200, 201, 400, 404],
+			"title": "Status Code",
+			"description": "Status code of the response",
+			"example": 200
+		},
+		"Resource": {
+			"type": "object",
+			"title": "Resource",
+			"description": "Available resource",
+			"properties": {
+				"rel": {
+					"type": "string",
+					"title": "Resource Identifier",
+					"description": "Identifier of the resource"
+				},
+				"href": {
+					"type": "string",
+					"title": "Resource path",
+					"description": "Path of the resource"
+				},
+				"method": {
+					"type": "string",
+					"title": "Resource method",
+					"description": "Method of the resource",
+					"enum": ["GET", "POST"]
+				}
+			},
+			"example": {
+				"rel": "pdv",
+				"href": "http://localhost:9000/pdv",
+				"method": "GET"
+			}
+		},
+		"Error400InvalidInput": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				}
+			},
+			"example": {
+				"statusCode": 400,
+				"error": "Invalid Input",
+				"message": "Invalid PDV supplied"
+			}
+		},
+		"Error400InvalidId": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				}
+			},
+			"example": {
+				"statusCode": 400,
+				"error": "Invalid Input",
+				"message": "Invalid Id supplied"
+			}
+		},
+		"Error404Id": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				}
+			},
+			"example": {
+				"statusCode": 404,
+				"error": "PDV Not Found",
+				"message": "None PDV found with supplied id"
+			}
+		},
+		"Error401LngLat": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				}
+			},
+			"example": {
+				"statusCode": 401,
+				"error": "Invalid Input",
+				"message": "Invalid Longitude or Latitude supplied"
+			}
+		},
+		"Error404LngLat": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				}
+			},
+			"example": {
+				"statusCode": 404,
+				"error": "PDV Not Found",
+				"message":
+					"None PDV found with supplieds Longitude and Latidude"
+			}
+		}
+	}
+}
