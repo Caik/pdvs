@@ -2,9 +2,9 @@ import {
 	Controller,
 	Get,
 	Params,
+	Post,
 	Request,
-	Response,
-	Post
+	Response
 } from "@decorators/express";
 import { Type } from "@decorators/express/lib/src/middleware";
 import { Router } from "express";
@@ -17,8 +17,8 @@ import {
 	Resource
 } from "../../lib/controller/ControllerModule";
 import { HttpMethodsEnum } from "../../lib/utils/HttpMethodsEnum";
+import { PDV } from "../entities/PDV";
 import { EntityNotFoundError } from "../errors/EntityNotFoundError";
-import { PDV } from "../models/PDV";
 import { PVDService } from "../services/PDVService";
 
 @Controller(PDVController.BASE_PATH)

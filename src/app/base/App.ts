@@ -18,6 +18,7 @@ export class App {
 		this.setBaseMiddlewares();
 		this.loadControllers();
 		this.configDatabase();
+		this.dataPopulate();
 		this.setDefaultNotFoundRoute();
 	}
 
@@ -41,6 +42,10 @@ export class App {
 
 	private configDatabase(): void {
 		require("../config/Database");
+	}
+
+	private dataPopulate(): void {
+		require("../config/Data");
 	}
 
 	private setDefaultNotFoundRoute(): void {

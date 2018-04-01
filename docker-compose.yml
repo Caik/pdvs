@@ -1,0 +1,45 @@
+version: '3'
+services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile-api
+        image: 'zx-backend-challenge-api:latest'
+        volumes:
+            - '.:${APP_DIRECTORY}'
+            - '${APP_DIRECTORY}/node_modules'
+        ports:
+            - '${API_LOCAL_PORT}:${API_CONTAINER_PORT}'
+        command:
+            - ./wait-for-it.sh
+            - 'db:${DB_CONTAINER_PORT}'
+            - '--'
+            - npm
+            - run
+            - dev
+        environment:
+            - 'API_CONTAINER_PORT=${API_CONTAINER_PORT}'
+            - 'DB_CONTAINER_PORT=${DB_CONTAINER_PORT}'
+            - 'DB_DATABASE=${DB_DATABASE_NAME}'
+            - 'DATA_POPULATE=${DATA_POPULATE}'
+        links:
+            - db
+        networks:
+            - zx
+    db:
+        build:
+            context: .
+            dockerfile: Dockerfile-db
+        image: 'zx-backend-challenge-db:latest'
+        volumes:
+            - 'db-data:/data/db'
+        ports:
+            - '${DB_LOCAL_PORT}:${DB_CONTAINER_PORT}'
+        restart: on-failure
+        networks:
+            - zx
+volumes:
+    db-data: null
+networks:
+    zx:
+        driver: bridge

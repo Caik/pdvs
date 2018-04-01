@@ -1,27 +1,52 @@
-import { getCustomRepository } from "typeorm";
-
+import { PDV } from "../entities/PDV";
 import { InvalidParameterError } from "../errors/InvalidParameterError";
-import { PDV } from "../models/PDV";
 import { PDVRepository } from "../repositories/PDVRepository";
 
 export class PVDService {
-	public static getPDVs(): Promise<PDV[]> {
-		return getCustomRepository(PDVRepository).getPDVs();
+	public static async getPDVs(): Promise<PDV[]> {
+		const pdvs = await PDVRepository.getPDVs();
+
+		return pdvs.map(pdv => new PDV().fromJSON(pdv));
 	}
 
-	public static getPDV(id: string): Promise<PDV> {
+	public static countPDVs(): Promise<number> {
+		return PDVRepository.countPDVs();
+	}
+
+	public static async getPDV(id: string): Promise<PDV> {
 		if (!id.match(/^[0-9]+$/)) {
 			throw new InvalidParameterError("PDV", id, 404);
 		}
 
-		return getCustomRepository(PDVRepository).getPDV(parseInt(id, 10));
+		const pdv = await PDVRepository.getPDV(parseInt(id, 10));
+
+		if (!pdv) {
+			return;
+		}
+
+		return new PDV().fromJSON(pdv);
 	}
 
-	public static getPDVByLngLat(lng: number, lat: number): Promise<PDV> {
-		return getCustomRepository(PDVRepository).getPDVByLngLat(lng, lat);
+	public static async searchNearestPDV(
+		lng: number,
+		lat: number
+	): Promise<PDV> {
+		const pdv = await PDVRepository.searchNearestPDV(lng, lat);
+
+		if (!pdv) {
+			return;
+		}
+
+		return new PDV().fromJSON(pdv);
 	}
 
-	public static addPDV(pdv: PDV): Promise<PDV> {
-		return getCustomRepository(PDVRepository).addPDV(pdv);
+	public static async addPDV(pdv: PDV): Promise<PDV> {
+		const pdvNew = await PDVRepository.addPDV(pdv);
+
+		if (!pdv) {
+			return;
+		}
+
+		return new PDV().fromJSON(pdv);
 	}
 }

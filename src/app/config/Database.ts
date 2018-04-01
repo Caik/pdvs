@@ -1,14 +1,12 @@
-import { createConnection } from "typeorm";
+import { connect, connection } from "mongoose";
 
-createConnection({
-	type: "mongodb",
-	host: "localhost",
-	port: parseInt(process.env.DB_CONTAINER_PORT, 10) || 27017,
-	database: process.env.DB_DATABASE_NAME || "teste",
-	entities: [__dirname + "/../models/**"],
-	dropSchema: false,
-	synchronize: true,
-	logging: true
-})
-	.then(() => console.log("Connected with database successfully"))
-	.catch(error => console.log(error));
+connect(
+	`mongodb://db:${process.env.DB_CONTAINER_PORT || 27017}/${process.env
+		.DB_DATABASE_NAME || "api"}`
+).catch(error => {
+	console.error(error);
+	console.log("Error on database connect");
+});
+
+export const db = connection;
+db.once("open", () => console.log("Connected to database successfully"));
