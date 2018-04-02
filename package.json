@@ -2,11 +2,11 @@
 	"name": "backend-challenge",
 	"version": "1.0.0",
 	"description": "ZX Ventures - Back-end Challenge",
-	"main": "server.js",
+	"main": "dist/server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "gulp",
-		"build": "",
+		"dev": "gulp serveDev",
+		"prod": "",
 		"doc": "nodemon docs/docServer.js --watch docs"
 	},
 	"author": "caik",

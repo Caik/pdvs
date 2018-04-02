@@ -29,6 +29,6 @@ gulp.task("serveDev", ["watch"], () => {
 		script: "dist/server.js",
 		env: { NODE_ENV: "development" }
 	}).on("restart", () => {
-		console.log("restarted");
+		console.log("Application restarted");
 	});
 });

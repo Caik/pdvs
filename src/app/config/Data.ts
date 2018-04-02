@@ -1,7 +1,7 @@
 import { readFile } from "fs";
-import { IPDV } from "../interfaces/IPDV";
-import pdvModel from "../models/PDVModel";
-import { PVDService } from "../services/PDVService";
+import { IPDV } from "../interface/IPDV";
+import pdvModel from "../model/PDVModel";
+import { PDVService } from "../service/PDVService";
 
 if (process.env.DATA_POPULATE) {
 	populate();
@@ -10,7 +10,7 @@ if (process.env.DATA_POPULATE) {
 async function populate(): Promise<void> {
 	let length: number;
 	try {
-		length = await PVDService.countPDVs();
+		length = await PDVService.countPDVs();
 	} catch (error) {
 		console.error(error);
 	}

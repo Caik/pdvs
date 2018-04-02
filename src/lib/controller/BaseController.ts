@@ -3,7 +3,7 @@ import * as express from "express";
 import { Request } from "express";
 import * as url from "url";
 
-import { HttpMethodsEnum } from "../utils/HttpMethodsEnum";
+import { HttpMethodsEnum } from "../util/HttpMethodsEnum";
 import { ControllersRegistry } from "./ControllerRegistry";
 import { ILink } from "./ILink";
 import { Resource } from "./Resource";

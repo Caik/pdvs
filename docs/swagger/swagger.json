@@ -64,7 +64,7 @@
 									"title": "Itens",
 									"description": "Itens",
 									"items": {
-										"$ref": "#/definitions/PDV"
+										"$ref": "#/definitions/PDVReturn"
 									}
 								},
 								"links": {
@@ -94,7 +94,7 @@
 						"description": "PDV object that needs to be added",
 						"required": true,
 						"schema": {
-							"$ref": "#/definitions/PDVAdd"
+							"$ref": "#/definitions/PDV"
 						}
 					}
 				],
@@ -303,97 +303,6 @@
 				}
 			}
 		},
-		"PDVAdd": {
-			"type": "object",
-			"properties": {
-				"tradingName": {
-					"type": "string",
-					"title": "PDV trading name",
-					"description": "Name of the establishment"
-				},
-				"ownerName": {
-					"type": "string",
-					"title": "PDV owner name",
-					"description": "Name of the establishment owner"
-				},
-				"document": {
-					"type": "string",
-					"format": "CPF/CNPJ",
-					"title": "PDV document",
-					"description": "Document of the establishment"
-				},
-				"coverageArea": {
-					"type": "object",
-					"title": "PDV coverage area",
-					"description": "Coverage area of the establishment",
-					"properties": {
-						"type": {
-							"type": "string"
-						},
-						"coordinates": {
-							"title": "Coordinates",
-							"description": "Coordinates",
-							"type": "array",
-							"minLength": 2,
-							"maxLength": 2,
-							"items": {
-								"type": "array",
-								"minLength": 1,
-								"maxLength": 1,
-								"items": {
-									"type": "array",
-									"minLength": 3,
-									"items": {
-										"type": "array",
-										"minLength": 2,
-										"maxLength": 2,
-										"items": {
-											"type": "number"
-										}
-									}
-								}
-							}
-						}
-					}
-				},
-				"address": {
-					"type": "object",
-					"title": "PDV adress",
-					"description": "Adress of the establishment",
-					"properties": {
-						"type": {
-							"type": "string"
-						},
-						"coordinates": {
-							"title": "Coordinates",
-							"description": "Coordinates",
-							"type": "array",
-							"items": {
-								"type": "number",
-								"minLength": 2,
-								"maxLength": 2
-							}
-						}
-					}
-				}
-			},
-			"example": {
-				"tradingName": "Adega da Cerveja - Pinheiros",
-				"ownerName": "Zé da Silva",
-				"document": "1432132123891/0001",
-				"coverageArea": {
-					"type": "MultiPolygon",
-					"coordinates": [
-						[[[30, 20], [45, 40], [10, 40], [30, 20]]],
-						[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-					]
-				},
-				"address": {
-					"type": "Point",
-					"coordinates": [-46.57421, -21.785741]
-				}
-			}
-		},
 		"PDVReturn": {
 			"type": "object",
 			"properties": {
@@ -443,7 +352,7 @@
 				}
 			},
 			"example": {
-				"rel": "pdv",
+				"rel": "pdvs",
 				"href": "http://localhost:9000/pdv",
 				"method": "GET"
 			}

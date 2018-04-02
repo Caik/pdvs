@@ -8,7 +8,7 @@ import {
 	ControllersRegistry,
 	ResourcesRegistry
 } from "../../lib/controller/ControllerModule";
-import { PDVController } from "../controllers/PDVController";
+import { PDVController } from "../controller/PDVController";
 
 export class App {
 	public expressApp: Express;

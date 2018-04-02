@@ -26,6 +26,24 @@ services:
             - db
         networks:
             - zx
+    doc:
+        build:
+            context: .
+            dockerfile: Dockerfile-doc
+        image: 'zx-backend-challenge-doc:latest'
+        volumes:
+            - './docs:${APP_DIRECTORY}/docs'
+            - '${APP_DIRECTORY}/node_modules'
+        ports:
+            - '${DOC_LOCAL_PORT}:${DOC_CONTAINER_PORT}'
+        command:
+            - npm
+            - run
+            - doc
+        environment:
+            - 'DOC_CONTAINER_PORT=${DOC_CONTAINER_PORT}'
+        networks:
+            - zx
     db:
         build:
             context: .

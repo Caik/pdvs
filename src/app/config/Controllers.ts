@@ -1,7 +1,7 @@
 import { attachControllers } from "@decorators/express";
 import { readdirSync } from "fs";
 
-const basePath = "../controllers/";
+const basePath = "../controller/";
 const files = readdirSync(__dirname + "/" + basePath);
 
 for (const file of files) {
