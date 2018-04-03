@@ -69,6 +69,37 @@ export class PDVRepository {
 
 	public static searchNearestPDV(lng: number, lat: number): Promise<IPDV> {
 		// to implement
+
+		// {
+		// 	coverageArea: {
+		// 		$geoIntersects: {
+		// 			$geometry: { type: "Point", coordinates: [-43, -23] }
+		// 		}
+		// 	}
+		// }
+		// db.friends.aggregate([
+		// 	{
+		// 		$geoNear: {
+		// 			near: {
+		// 				type: "Point",
+		// 				coordinates: [-73.98652, 40.752044]
+		// 			},
+		// 			maxDistance: 300,
+		// 			distanceField: "friends.calculated_distance",
+		// 			query: {
+		// 				PLAYDATE_RANGE: {
+		// 					$geoIntersects: {
+		// 						$geometry: {
+		// 							type: "Point",
+		// 							coordinates: [-73.98652, 40.752044]
+		// 						}
+		// 					}
+		// 				}
+		// 			},
+		// 			spherical: true
+		// 		}
+		// 	}
+		// ]);
 		return;
 	}
 
