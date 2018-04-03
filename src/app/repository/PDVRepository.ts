@@ -67,40 +67,40 @@ export class PDVRepository {
 		return pdv[0];
 	}
 
-	public static searchNearestPDV(lng: number, lat: number): Promise<IPDV> {
-		// to implement
+	public static async searchNearestPDV(
+		lng: number,
+		lat: number
+	): Promise<IPDV> {
+		const pdv = await pdvModel.aggregate([
+			{
+				$geoNear: {
+					distanceField: "distance",
+					near: {
+						type: "Point",
+						coordinates: [lng, lat]
+					},
+					query: {
+						coverageArea: {
+							$geoIntersects: {
+								$geometry: {
+									type: "Point",
+									coordinates: [lng, lat]
+								}
+							}
+						}
+					},
+					spherical: true
+				}
+			},
+			{ $limit: 1 },
+			{ $project: PDVRepository._selectDefault }
+		]);
 
-		// {
-		// 	coverageArea: {
-		// 		$geoIntersects: {
-		// 			$geometry: { type: "Point", coordinates: [-43, -23] }
-		// 		}
-		// 	}
-		// }
-		// db.friends.aggregate([
-		// 	{
-		// 		$geoNear: {
-		// 			near: {
-		// 				type: "Point",
-		// 				coordinates: [-73.98652, 40.752044]
-		// 			},
-		// 			maxDistance: 300,
-		// 			distanceField: "friends.calculated_distance",
-		// 			query: {
-		// 				PLAYDATE_RANGE: {
-		// 					$geoIntersects: {
-		// 						$geometry: {
-		// 							type: "Point",
-		// 							coordinates: [-73.98652, 40.752044]
-		// 						}
-		// 					}
-		// 				}
-		// 			},
-		// 			spherical: true
-		// 		}
-		// 	}
-		// ]);
-		return;
+		if (pdv.length === 0) {
+			return;
+		}
+
+		return pdv[0];
 	}
 
 	public static addPDV(pdv: IPDV): Promise<IPDV> {

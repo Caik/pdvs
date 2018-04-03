@@ -8,7 +8,7 @@ export default model<PDVType>(
 	"pdv",
 	new Schema({
 		id: Number,
-		tradingName: String,
+		tradingName: String, 
 		ownerName: String,
 		document: { type: String, index: true, unique: true },
 		coverageArea: {
@@ -19,5 +19,5 @@ export default model<PDVType>(
 			type: { type: String },
 			coordinates: [Number, Number]
 		}
-	})
+	}).index({ address: "2dsphere" })
 );

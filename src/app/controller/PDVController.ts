@@ -163,13 +163,67 @@ export class PDVController extends BaseController {
 	}
 
 	@Get(PDVController.PDV_SEARCH_PATH)
-	public getPDVByLngLat(
+	public async getPDVByLngLat(
 		@Params("lng") lng: string,
 		@Params("lat") lat: string,
 		@Request() req: express.Request,
 		@Response() res: express.Response
 	) {
-		res.status(200).json({ ok: "/:lng,:lat", lng, lat });
+		let pdv: IPDV;
+		const links = this.getLinksResources(
+			req,
+			this.resourceDefaults,
+			this.replacesDefault
+		);
+
+		try {
+			pdv = await PDVService.searchNearestPDV(lng, lat);
+		} catch(error) {
+			if (error.statusCode !== undefined) {
+				res.status(error.statusCode).json({
+					statusCode: error.statusCode,
+					error: error.name,
+					message: error.message,
+					links
+				});
+				return;
+			}
+
+			res.status(500).json({
+				statusCode: 500,
+				error: "Internal Server Error",
+				message: "A error has occurred, please try again latter",
+				links
+			});
+			return;
+		}
+
+		if (!pdv) {
+			res.status(404).json({
+				statusCode: 404,
+				error: "PDV Not Found",
+				message: "None PDV found with supplied id",
+				links
+			});
+			return;
+		}
+
+		Object.defineProperty(pdv, "objectId", { enumerable: false });
+		Object.assign(pdv, {
+			links: this.getLinksResources(
+				req,
+				[PDVController.PDV_RESOURCE, PDVController.PDV_ALT_RESOURCE],
+				[["id", pdv.id.toString()], ["objectId", pdv.objectId]]
+			)
+		});
+
+		const response: IResponseItem<IPDV> = {
+			statusCode: 200,
+			item: pdv,
+			links
+		};
+
+		res.status(200).json(response);
 	}
 	@Get(PDVController.PDV_PATH)
 	public async getPDV(

@@ -57,16 +57,18 @@ export class PDVService {
 	}
 
 	public static async searchNearestPDV(
-		lng: number,
-		lat: number
-	): Promise<PDV> {
-		const pdv = await PDVRepository.searchNearestPDV(lng, lat);
+		lng: string,
+		lat: string
+	): Promise<IPDV> {
+		// Tratar errors
+
+		const pdv = await PDVRepository.searchNearestPDV(parseFloat(lng), parseFloat(lat));
 
 		if (!pdv) {
 			return;
 		}
 
-		return new PDV().fromJSON(pdv);
+		return new PDV().fromJSON(pdv).toJson();
 	}
 
 	public static async addPDV(pdv: PDV): Promise<PDV> {
