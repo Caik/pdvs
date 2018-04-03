@@ -1,4 +1,5 @@
 import {
+	Body,
 	Controller,
 	Get,
 	Params,
@@ -20,6 +21,7 @@ import { HttpMethodsEnum } from "../../lib/util/HttpMethodsEnum";
 import { PDV } from "../entity/PDV";
 import { EntityNotFoundError } from "../error/EntityNotFoundError";
 import { IPDV } from "../interface/IPDV";
+import { IResponseItem } from "../interface/IResponseItem";
 import { IResponseList } from "../interface/IResponseList";
 import { PDVService } from "../service/PDVService";
 
@@ -47,6 +49,17 @@ export class PDVController extends BaseController {
 
 	public static readonly PDV_SEARCH_RESOURCE: string = "pdvs.pdv:search";
 
+	public readonly resourceDefaults: string[] = [
+		PDVController.PDVS_RESOURCE,
+		PDVController.PDVS_CREATE_RESOURCE,
+		PDVController.PDV_SEARCH_RESOURCE
+	];
+
+	public readonly replacesDefault: Array<[string, string]> = [
+		["lng", "LNG"],
+		["lat", "LAT"]
+	];
+
 	constructor() {
 		super();
 	}
@@ -61,18 +74,13 @@ export class PDVController extends BaseController {
 		let pdvs: IPDV[];
 		const links = this.getLinksResources(
 			req,
-			[
-				PDVController.PDVS_RESOURCE,
-				PDVController.PDVS_CREATE_RESOURCE,
-				PDVController.PDV_SEARCH_RESOURCE
-			],
-			[["lng", "LNG"], ["lat", "LAT"]]
+			this.resourceDefaults,
+			this.replacesDefault
 		);
 
 		try {
 			pdvs = await PDVService.getPDVs(offset, limit);
 		} catch (error) {
-			console.log(error);
 			res.status(500).json({
 				statusCode: 500,
 				error: "Internal Server Error",
@@ -110,11 +118,48 @@ export class PDVController extends BaseController {
 	}
 
 	@Post(PDVController.PDVS_PATH)
-	public addPDV(
+	public async addPDV(
 		@Request() req: express.Request,
-		@Response() res: express.Response
+		@Response() res: express.Response,
+		@Body() body
 	) {
-		res.status(200).json({ ok: "/POST" });
+		const pdv = new PDV().fromJSON(body);
+		let newPDV: PDV;
+		const links = this.getLinksResources(
+			req,
+			this.resourceDefaults,
+			this.replacesDefault
+		);
+
+		try {
+			newPDV = await PDVService.addPDV(pdv);
+		} catch (error) {
+			if (error.statusCode !== undefined) {
+				res.status(error.statusCode).json({
+					statusCode: error.statusCode,
+					error: error.name,
+					message: error.message,
+					links
+				});
+				return;
+			}
+
+			res.status(500).json({
+				statusCode: 500,
+				error: "Internal Server Error",
+				message: "A error has occurred, please try again latter",
+				links
+			});
+			return;
+		}
+
+		const response: IResponseItem<IPDV> = {
+			statusCode: 200,
+			item: newPDV.toJson(),
+			links
+		};
+
+		res.status(200).json(response);
 	}
 
 	@Get(PDVController.PDV_SEARCH_PATH)
@@ -127,12 +172,66 @@ export class PDVController extends BaseController {
 		res.status(200).json({ ok: "/:lng,:lat", lng, lat });
 	}
 	@Get(PDVController.PDV_PATH)
-	public getPDV(
+	public async getPDV(
 		@Params("id") id: string,
 		@Request() req: express.Request,
 		@Response() res: express.Response
 	) {
-		res.status(200).json({ ok: "/:Id", id });
+		let pdv: IPDV;
+		const links = this.getLinksResources(
+			req,
+			this.resourceDefaults,
+			this.replacesDefault
+		);
+
+		try {
+			pdv = await PDVService.getPDV(id);
+		} catch (error) {
+			if (error.statusCode !== undefined) {
+				res.status(error.statusCode).json({
+					statusCode: error.statusCode,
+					error: error.name,
+					message: error.message,
+					links
+				});
+				return;
+			}
+
+			res.status(500).json({
+				statusCode: 500,
+				error: "Internal Server Error",
+				message: "A error has occurred, please try again latter",
+				links
+			});
+			return;
+		}
+
+		if (!pdv) {
+			res.status(404).json({
+				statusCode: 404,
+				error: "PDV Not Found",
+				message: "None PDV found with supplied id",
+				links
+			});
+			return;
+		}
+
+		Object.defineProperty(pdv, "objectId", { enumerable: false });
+		Object.assign(pdv, {
+			links: this.getLinksResources(
+				req,
+				[PDVController.PDV_RESOURCE, PDVController.PDV_ALT_RESOURCE],
+				[["id", pdv.id.toString()], ["objectId", pdv.objectId]]
+			)
+		});
+
+		const response: IResponseItem<IPDV> = {
+			statusCode: 200,
+			item: pdv,
+			links
+		};
+
+		res.status(200).json(response);
 	}
 
 	protected getType(): Type {

@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import { ILink } from "../../lib/controller/ControllerModule";
 import { ISerializable } from "../../lib/interface/ISerializable";
 import { IAddress } from "../interface/IAdress";
@@ -7,19 +8,17 @@ import { IPDV } from "../interface/IPDV";
 export class PDV implements ISerializable<PDV>, IPDV {
 	private _objectId;
 
-	private _id;
+	@IsNotEmpty() private _id;
 
-	private _name: string;
+	@IsNotEmpty() private _tradingName: string;
 
-	private _tradingName: string;
+	@IsNotEmpty() private _ownerName: string;
 
-	private _ownerName: string;
+	@IsNotEmpty() private _document: string;
 
-	private _document: string;
+	@IsNotEmpty() private _coverageArea: ICoverageArea;
 
-	private _coverageArea: ICoverageArea;
-
-	private _address: IAddress;
+	@IsNotEmpty() private _address: IAddress;
 
 	/**
 	 * Getter objectId
@@ -51,22 +50,6 @@ export class PDV implements ISerializable<PDV>, IPDV {
 	 */
 	public set id(value: number) {
 		this._id = value;
-	}
-
-	/**
-	 * Getter name
-	 * @return {string}
-	 */
-	public get name(): string {
-		return this._name;
-	}
-
-	/**
-	 * Setter name
-	 * @param {string} value
-	 */
-	public set name(value: string) {
-		this._name = value;
 	}
 
 	/**

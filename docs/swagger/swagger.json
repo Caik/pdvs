@@ -110,6 +110,12 @@
 						"schema": {
 							"$ref": "#/definitions/Error400InvalidInput"
 						}
+					},
+					"409": {
+						"description": "Document already exists on database",
+						"schema": {
+							"$ref": "#/definitions/Error409Document"
+						}
 					}
 				}
 			}
@@ -190,7 +196,7 @@
 						}
 					},
 					"400": {
-						"description": "Invalid Id supplied",
+						"description": "Invalid Longitude or Latitude supplied",
 						"schema": {
 							"$ref": "#/definitions/Error401LngLat"
 						}
@@ -208,6 +214,14 @@
 	"definitions": {
 		"PDV": {
 			"type": "object",
+			"required": [
+				"id",
+				"tradingName",
+				"ownerName",
+				"document",
+				"coverageArea",
+				"address"
+			],
 			"properties": {
 				"id": {
 					"type": "integer",
@@ -374,12 +388,37 @@
 					"type": "string",
 					"title": "Error message",
 					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
 				}
 			},
 			"example": {
 				"statusCode": 400,
 				"error": "Invalid Input",
-				"message": "Invalid PDV supplied"
+				"message": "Invalid PDV supplied",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
 			}
 		},
 		"Error400InvalidId": {
@@ -399,12 +438,37 @@
 					"type": "string",
 					"title": "Error message",
 					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
 				}
 			},
 			"example": {
 				"statusCode": 400,
 				"error": "Invalid Input",
-				"message": "Invalid Id supplied"
+				"message": "Invalid Id supplied",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
 			}
 		},
 		"Error404Id": {
@@ -424,12 +488,37 @@
 					"type": "string",
 					"title": "Error message",
 					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
 				}
 			},
 			"example": {
 				"statusCode": 404,
 				"error": "PDV Not Found",
-				"message": "None PDV found with supplied id"
+				"message": "None PDV found with supplied id",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
 			}
 		},
 		"Error401LngLat": {
@@ -449,12 +538,37 @@
 					"type": "string",
 					"title": "Error message",
 					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
 				}
 			},
 			"example": {
 				"statusCode": 401,
 				"error": "Invalid Input",
-				"message": "Invalid Longitude or Latitude supplied"
+				"message": "Invalid Longitude or Latitude supplied",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
 			}
 		},
 		"Error404LngLat": {
@@ -474,13 +588,88 @@
 					"type": "string",
 					"title": "Error message",
 					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
 				}
 			},
 			"example": {
 				"statusCode": 404,
 				"error": "PDV Not Found",
 				"message":
-					"None PDV found with supplieds Longitude and Latidude"
+					"None PDV found with supplieds Longitude and Latidude",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
+			}
+		},
+		"Error409Document": {
+			"type": "object",
+			"title": "Error Response",
+			"description": "Response with error",
+			"properties": {
+				"statusCode": {
+					"$ref": "#/definitions/StatusCode"
+				},
+				"error": {
+					"type": "string",
+					"title": "Error name",
+					"description": "Name of the error"
+				},
+				"message": {
+					"type": "string",
+					"title": "Error message",
+					"description": "Details about the error"
+				},
+				"links": {
+					"type": "array",
+					"title": "Resources",
+					"description": "Available resources",
+					"items": {
+						"$ref": "#/definitions/Resource"
+					}
+				}
+			},
+			"example": {
+				"statusCode": 409,
+				"error": "Duplicated Entry",
+				"message": "Duplicated entry for Document",
+				"links": [
+					{
+						"rel": "pdvs",
+						"href": "http://localhost:9000/pdv",
+						"method": "GET"
+					},
+					{
+						"rel": "pdvs:create",
+						"href": "http://localhost:9000/pdv",
+						"method": "POST"
+					},
+					{
+						"rel": "pdvs:search",
+						"href": "http://localhost:9000/pdv/LNG,LAT",
+						"method": "GET"
+					}
+				]
 			}
 		}
 	}

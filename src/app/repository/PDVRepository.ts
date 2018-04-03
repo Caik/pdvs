@@ -1,3 +1,4 @@
+import { ObjectId } from "bson";
 import { PDV } from "../entity/PDV";
 import { IPDV } from "../interface/IPDV";
 import pdvModel from "../model/PDVModel";
@@ -34,8 +35,36 @@ export class PDVRepository {
 		return pdvModel.count({}).exec();
 	}
 
-	public static getPDV(id: number): Promise<IPDV> {
-		return pdvModel.findById(id).exec();
+	public static async getPDVbyId(id: string): Promise<IPDV> {
+		const pdv = await pdvModel
+			.aggregate([
+				{ $match: { _id: ObjectId.createFromHexString(id) } },
+				{ $project: PDVRepository._selectDefault }
+			])
+			.exec();
+
+		if (pdv.length === 0) {
+			return;
+		}
+
+		return pdv[0];
+	}
+
+	public static async getPDVByProperties(
+		properties: Partial<IPDV>
+	): Promise<IPDV> {
+		const pdv = await pdvModel
+			.aggregate([
+				{ $match: properties },
+				{ $project: PDVRepository._selectDefault }
+			])
+			.exec();
+
+		if (pdv.length === 0) {
+			return;
+		}
+
+		return pdv[0];
 	}
 
 	public static searchNearestPDV(lng: number, lat: number): Promise<IPDV> {
@@ -43,7 +72,7 @@ export class PDVRepository {
 		return;
 	}
 
-	public static addPDV(pdv: PDV): Promise<IPDV> {
+	public static addPDV(pdv: IPDV): Promise<IPDV> {
 		return pdvModel.create(pdv);
 	}
 }

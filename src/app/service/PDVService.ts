@@ -1,4 +1,6 @@
+import { validate, ValidationError } from "class-validator";
 import { PDV } from "../entity/PDV";
+import { DuplicatedEntry } from "../error/DuplicatedEntry";
 import { InvalidParameterError } from "../error/InvalidParameterError";
 import { IPDV } from "../interface/IPDV";
 import { PDVRepository } from "../repository/PDVRepository";
@@ -28,18 +30,30 @@ export class PDVService {
 		return PDVRepository.countPDVs();
 	}
 
-	public static async getPDV(id: string): Promise<PDV> {
-		if (!id.match(/^[0-9]+$/)) {
-			throw new InvalidParameterError("PDV", id, 404);
+	public static async getPDV(id: string): Promise<IPDV> {
+		let isObjectId: boolean = false;
+		let pdv: IPDV;
+
+		if (id.length === 24) {
+			isObjectId = true;
+			pdv = await PDVRepository.getPDVbyId(id);
 		}
 
-		const pdv = await PDVRepository.getPDV(parseInt(id, 10));
+		if (!isObjectId) {
+			if (!id.match(/^[0-9]+$/)) {
+				throw new InvalidParameterError("id", 400);
+			}
+
+			pdv = await PDVRepository.getPDVByProperties({
+				id: parseInt(id, 10)
+			});
+		}
 
 		if (!pdv) {
 			return;
 		}
 
-		return new PDV().fromJSON(pdv);
+		return new PDV().fromJSON(pdv).toJson();
 	}
 
 	public static async searchNearestPDV(
@@ -56,12 +70,25 @@ export class PDVService {
 	}
 
 	public static async addPDV(pdv: PDV): Promise<PDV> {
-		const pdvNew = await PDVRepository.addPDV(pdv);
+		let validation: ValidationError[];
+		let pdvNew: IPDV;
 
-		if (!pdv) {
-			return;
+		try {
+			validation = await validate(pdv);
+		} catch (error) {
+			throw new InvalidParameterError("PDV", 400);
 		}
 
-		return new PDV().fromJSON(pdv);
+		if (validation.length !== 0) {
+			throw new InvalidParameterError("PDV", 400);
+		}
+
+		try {
+			pdvNew = await PDVRepository.addPDV(pdv.toJson());
+		} catch (error) {
+			throw new DuplicatedEntry("document", 409);
+		}
+
+		return new PDV().fromJSON(pdvNew);
 	}
 }

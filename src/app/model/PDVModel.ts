@@ -1,6 +1,5 @@
 import { Document, model, Schema } from "mongoose";
 
-import { ObjectID } from "bson";
 import { IPDV } from "../interface/IPDV";
 
 type PDVType = IPDV & Document;
