@@ -154,12 +154,12 @@ export class PDVController extends BaseController {
 		}
 
 		const response: IResponseItem<IPDV> = {
-			statusCode: 200,
+			statusCode: 201,
 			item: newPDV.toJson(),
 			links
 		};
 
-		res.status(200).json(response);
+		res.status(201).json(response);
 	}
 
 	@Get(PDVController.PDV_SEARCH_PATH)
