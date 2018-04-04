@@ -1,7 +1,7 @@
-export class EntityNotFoundError extends Error {
+export class InvalidInputError extends Error {
 	private statusCode: number;
 
-	constructor(entity: string, properties: string[], statusCode: number) {
+	constructor(properties: string[], statusCode: number) {
 		super();
 
 		let props: string = "";
@@ -11,14 +11,14 @@ export class EntityNotFoundError extends Error {
 			props += `${
 				propLength > 2 && i + 1 < propLength && i !== 0 ? "," : ""
 			} ${
-				propLength > 1 && i + 1 === propLength ? "and " : ""
+				propLength > 1 && i + 1 === propLength ? "or " : ""
 			}${value.replace(/(?:^|\s)\S/g, a => a.toUpperCase())}`;
 		});
 
 		props = props.replace(/^ /, "");
 
-		this.name = `${entity} Not Found`;
-		this.message = `None ${entity} found with ${props} supplied`;
+		this.name = "Invalid Input";
+		this.message = `Invalid ${props} supplied`;
 		this.statusCode = statusCode;
 	}
 }

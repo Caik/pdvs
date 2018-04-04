@@ -1,7 +1,8 @@
 import { validate, ValidationError } from "class-validator";
 import { PDV } from "../entity/PDV";
 import { DuplicatedEntry } from "../error/DuplicatedEntry";
-import { InvalidParameterError } from "../error/InvalidParameterError";
+import { EntityNotFoundError } from "../error/EntityNotFoundError";
+import { InvalidInputError } from "../error/InvalidInputError";
 import { IPDV } from "../interface/IPDV";
 import { PDVRepository } from "../repository/PDVRepository";
 
@@ -41,7 +42,7 @@ export class PDVService {
 
 		if (!isObjectId) {
 			if (!id.match(/^[0-9]+$/)) {
-				throw new InvalidParameterError("id", 400);
+				throw new InvalidInputError(["id"], 400);
 			}
 
 			pdv = await PDVRepository.getPDVByProperties({
@@ -50,7 +51,7 @@ export class PDVService {
 		}
 
 		if (!pdv) {
-			return;
+			throw new EntityNotFoundError("PDV", ["id"], 404);
 		}
 
 		return new PDV().fromJSON(pdv).toJson();
@@ -60,12 +61,43 @@ export class PDVService {
 		lng: string,
 		lat: string
 	): Promise<IPDV> {
-		// Tratar errors
+		let pdv: IPDV;
+		let lngFloat: number;
+		let latFloat: number;
+		const regex: RegExp = /^[\+\-]?[0-9]+(\.[0-9]+)?$/;
 
-		const pdv = await PDVRepository.searchNearestPDV(parseFloat(lng), parseFloat(lat));
+		if (!lng || !lat) {
+			throw new InvalidInputError(["longitude", "latitude"], 400);
+		}
+
+		if (!lng.match(regex) || !lat.match(regex)) {
+			throw new InvalidInputError(["longitude", "latitude"], 400);
+		}
+
+		lngFloat = parseFloat(lng);
+		latFloat = parseFloat(lat);
+
+		if (
+			lngFloat < -180 ||
+			lngFloat > 180 ||
+			latFloat < -90 ||
+			latFloat > 90
+		) {
+			throw new InvalidInputError(["longitude", "latitude"], 400);
+		}
+
+		try {
+			pdv = await PDVRepository.searchNearestPDV(lngFloat, latFloat);
+		} catch (error) {
+			throw new InvalidInputError(["longitude", "latitude"], 400);
+		}
 
 		if (!pdv) {
-			return;
+			throw new EntityNotFoundError(
+				"PDV",
+				["longitude", "latidude"],
+				404
+			);
 		}
 
 		return new PDV().fromJSON(pdv).toJson();
@@ -78,11 +110,11 @@ export class PDVService {
 		try {
 			validation = await validate(pdv);
 		} catch (error) {
-			throw new InvalidParameterError("PDV", 400);
+			throw new InvalidInputError(["PDV"], 400);
 		}
 
 		if (validation.length !== 0) {
-			throw new InvalidParameterError("PDV", 400);
+			throw new InvalidInputError(["PDV"], 400);
 		}
 
 		try {

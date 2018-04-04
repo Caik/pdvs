@@ -152,7 +152,7 @@
 							"example1": {
 								"statusCode": 400,
 								"error": "Invalid Input",
-								"message": "Supplied Id invalid"
+								"message": "Invalid Id supplied"
 							}
 						}
 					},
@@ -501,7 +501,7 @@
 			"example": {
 				"statusCode": 404,
 				"error": "PDV Not Found",
-				"message": "None PDV found with supplied id",
+				"message": "None PDV found with Id supplied",
 				"links": [
 					{
 						"rel": "pdvs",
@@ -602,7 +602,7 @@
 				"statusCode": 404,
 				"error": "PDV Not Found",
 				"message":
-					"None PDV found with supplieds Longitude and Latidude",
+					"None PDV found with Longitude and Latitude supplied",
 				"links": [
 					{
 						"rel": "pdvs",

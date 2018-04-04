@@ -178,7 +178,7 @@ export class PDVController extends BaseController {
 
 		try {
 			pdv = await PDVService.searchNearestPDV(lng, lat);
-		} catch(error) {
+		} catch (error) {
 			if (error.statusCode !== undefined) {
 				res.status(error.statusCode).json({
 					statusCode: error.statusCode,
@@ -193,16 +193,6 @@ export class PDVController extends BaseController {
 				statusCode: 500,
 				error: "Internal Server Error",
 				message: "A error has occurred, please try again latter",
-				links
-			});
-			return;
-		}
-
-		if (!pdv) {
-			res.status(404).json({
-				statusCode: 404,
-				error: "PDV Not Found",
-				message: "None PDV found with supplied id",
 				links
 			});
 			return;
@@ -255,16 +245,6 @@ export class PDVController extends BaseController {
 				statusCode: 500,
 				error: "Internal Server Error",
 				message: "A error has occurred, please try again latter",
-				links
-			});
-			return;
-		}
-
-		if (!pdv) {
-			res.status(404).json({
-				statusCode: 404,
-				error: "PDV Not Found",
-				message: "None PDV found with supplied id",
 				links
 			});
 			return;
