@@ -5,8 +5,7 @@
 	"main": "dist/server.js",
 	"scripts": {
 		"test": "gulp test",
-		"dev": "gulp serveDev",
-		"prod": "",
+		"serve": "gulp serve",
 		"doc": "nodemon docs/docServer.js --watch docs"
 	},
 	"author": "caik",

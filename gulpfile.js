@@ -6,7 +6,7 @@ const mocha = require("gulp-mocha");
 
 var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task("default", ["serveDev"]);
+gulp.task("default", ["serve"]);
 
 gulp.task("clean", () => {
 	return gulp
@@ -25,7 +25,7 @@ gulp.task("watch", ["compile"], () => {
 	gulp.watch("src/**/*.ts", ["compile"]);
 });
 
-gulp.task("serveDev", ["watch"], () => {
+gulp.task("serve", ["watch"], () => {
 	nodemon({
 		script: "dist/server.js",
 		env: { NODE_ENV: "development" }
