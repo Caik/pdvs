@@ -1,10 +1,10 @@
 version: '3'
 services:
-    api:
+    api_dev:
         build:
             context: .
             dockerfile: Dockerfile-api
-        image: 'zx-backend-challenge-api:latest'
+        image: 'zx-backend-challenge-api_dev:latest'
         volumes:
             - '.:${APP_DIRECTORY}'
             - '${APP_DIRECTORY}/node_modules'
@@ -16,7 +16,7 @@ services:
             - '--'
             - npm
             - run
-            - dev
+            - serve
         environment:
             - 'API_CONTAINER_PORT=${API_CONTAINER_PORT}'
             - 'DB_CONTAINER_PORT=${DB_CONTAINER_PORT}'
@@ -26,12 +26,12 @@ services:
             - 'DB_FORCE_DROP_DATABASE=${DB_FORCE_DROP_DATABASE}'
         restart: on-failure
         networks:
-            - zx
-    doc:
+            - zx_dev
+    doc_dev:
         build:
             context: .
             dockerfile: Dockerfile-doc
-        image: 'zx-backend-challenge-doc:latest'
+        image: 'zx-backend-challenge-doc_dev:latest'
         volumes:
             - './docs:${APP_DIRECTORY}/docs'
             - '${APP_DIRECTORY}/node_modules'
@@ -45,21 +45,21 @@ services:
             - 'DOC_CONTAINER_PORT=${DOC_CONTAINER_PORT}'
         restart: on-failure
         networks:
-            - zx
-    db:
+            - zx_dev
+    db_dev:
         build:
             context: .
             dockerfile: Dockerfile-db
-        image: 'zx-backend-challenge-db:latest'
+        image: 'zx-backend-challenge-db_dev:latest'
         volumes:
-            - 'db-data:/data/db'
+            - 'db-data_dev:/data/db'
         ports:
             - '${DB_LOCAL_PORT}:${DB_CONTAINER_PORT}'
         restart: on-failure
         networks:
-            - zx
+            - zx_dev
 volumes:
-    db-data: null
+    db-data_dev: null
 networks:
-    zx:
+    zx_dev:
         driver: bridge

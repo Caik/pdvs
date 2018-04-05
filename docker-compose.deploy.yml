@@ -1,0 +1,65 @@
+version: '3'
+services:
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile-api-deploy
+        image: 'zx-backend-challenge-api:latest'
+        volumes:
+            - '.:${APP_DIRECTORY}'
+            - '${APP_DIRECTORY}/node_modules'
+        ports:
+            - '${API_PROD_LOCAL_PORT}:${API_PROD_CONTAINER_PORT}'
+        command:
+            - ./wait-for-it.sh
+            - 'db:${DB_PROD_CONTAINER_PORT}'
+            - '--'
+            - npm
+            - run
+            - serve
+        environment:
+            - 'API_CONTAINER_PORT=${API_PROD_CONTAINER_PORT}'
+            - 'DB_CONTAINER_PORT=${DB_PROD_CONTAINER_PORT}'
+            - 'DB_DATABASE_NAME=${DB_PROD_DATABASE_NAME}'
+            - 'DATA_POPULATE=${DATA_PROD_POPULATE}'
+            - 'DB_CONTAINER_HOST=${DB_PROD_CONTAINER_HOST}'
+            - 'DB_FORCE_DROP_DATABASE=${DB_PROD_FORCE_DROP_DATABASE}'
+        restart: on-failure
+        networks:
+            - zx
+    doc:
+        build:
+            context: .
+            dockerfile: Dockerfile-doc
+        image: 'zx-backend-challenge-doc:latest'
+        volumes:
+            - './docs:${APP_DIRECTORY}/docs'
+            - '${APP_DIRECTORY}/node_modules'
+        ports:
+            - '${DOC_PROD_LOCAL_PORT}:${DOC_PROD_CONTAINER_PORT}'
+        command:
+            - npm
+            - run
+            - doc
+        environment:
+            - 'DOC_CONTAINER_PORT=${DOC_PROD_CONTAINER_PORT}'
+        restart: on-failure
+        networks:
+            - zx
+    db:
+        build:
+            context: .
+            dockerfile: Dockerfile-db
+        image: 'zx-backend-challenge-db:latest'
+        volumes:
+            - 'db-data:/data/db'
+        ports:
+            - '${DB_PROD_LOCAL_PORT}:${DB_PROD_CONTAINER_PORT}'
+        restart: on-failure
+        networks:
+            - zx
+volumes:
+    db-data: null
+networks:
+    zx:
+        driver: bridge

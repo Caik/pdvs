@@ -16,7 +16,7 @@ services:
             - '--'
             - npm
             - run
-            - dev
+            - serve
         environment:
             - 'API_CONTAINER_PORT=${API_TEST_CONTAINER_PORT}'
             - 'DB_CONTAINER_PORT=${DB_TEST_CONTAINER_PORT}'
