@@ -5,7 +5,7 @@ import appInstance from "./app/base/App";
 
 class Server {
 	constructor(app: App) {
-		const port = this.normalizePort(process.env.API_CONTAINER_PORT || 8000);
+		const port = this.normalizePort(process.env.API_CONTAINER_PORT || 9000);
 
 		app.expressApp.listen(port, () =>
 			console.log(`Server listening on port ${port}`)
