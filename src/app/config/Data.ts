@@ -16,18 +16,10 @@ async function populate(): Promise<void> {
 	}
 
 	if (length === 0 || length === undefined) {
-		console.log("Populating database");
 		readFile(__dirname + "/../../../data/pdvs.json", (err, dt) => {
 			const data: IPDV[] = JSON.parse(dt.toString()).pdvs;
 
-			pdvModel
-				.insertMany(data)
-				.then(sucess =>
-					console.log(
-						`Database populated successfully: ${data.length} itens`
-					)
-				)
-				.catch(error => console.error(error));
+			pdvModel.insertMany(data).catch(error => console.error(error));
 		});
 	}
 }

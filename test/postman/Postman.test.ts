@@ -32,7 +32,8 @@ describe("Postman", () => {
 					summary.run.failures.length !== 0
 				);
 
-				const result = expect(ok).to.be.true;
+				// tslint:disable-next-line:no-unused-expression
+				expect(ok).to.be.true;
 			});
 	});
 });

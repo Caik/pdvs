@@ -26,11 +26,9 @@ export class DBTestUtils {
 
 		return pdvModel
 			.insertMany(data)
-			.then(sucess =>
-				console.log(
-					`Database populated successfully: ${data.length} itens`
-				)
-			)
+			.then(sucess => {
+				return;
+			})
 			.catch(error => console.error(error));
 	}
 }

@@ -27,6 +27,8 @@ services:
         restart: on-failure
         networks:
             - zx_test
+        logging:
+            driver: none
     api_test:
         build:
             context: .
@@ -59,6 +61,8 @@ services:
         image: 'zx-backend-challenge-db_test:latest'
         networks:
             - zx_test
+        logging:
+            driver: none
 networks:
     zx_test:
         driver: bridge
