@@ -58,6 +58,11 @@ export class App {
 					ResourcesRegistry.getResourceAsLink(
 						PDVController.PDVS_RESOURCE,
 						req
+					),
+					ResourcesRegistry.getResourceAsLink(
+						PDVController.PDV_SEARCH_RESOURCE,
+						req,
+						PDVController.replacesDefault
 					)
 				]
 			});

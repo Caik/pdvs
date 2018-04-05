@@ -49,13 +49,13 @@ export class PDVController extends BaseController {
 
 	public static readonly PDV_SEARCH_RESOURCE: string = "pdvs.pdv:search";
 
-	public readonly resourceDefaults: string[] = [
+	public static readonly resourceDefaults: string[] = [
 		PDVController.PDVS_RESOURCE,
 		PDVController.PDVS_CREATE_RESOURCE,
 		PDVController.PDV_SEARCH_RESOURCE
 	];
 
-	public readonly replacesDefault: Array<[string, string]> = [
+	public static readonly replacesDefault: Array<[string, string]> = [
 		["lng", "LNG"],
 		["lat", "LAT"]
 	];
@@ -74,8 +74,8 @@ export class PDVController extends BaseController {
 		let pdvs: IPDV[];
 		const links = this.getLinksResources(
 			req,
-			this.resourceDefaults,
-			this.replacesDefault
+			PDVController.resourceDefaults,
+			PDVController.replacesDefault
 		);
 
 		try {
@@ -127,8 +127,8 @@ export class PDVController extends BaseController {
 		let newPDV: PDV;
 		const links = this.getLinksResources(
 			req,
-			this.resourceDefaults,
-			this.replacesDefault
+			PDVController.resourceDefaults,
+			PDVController.replacesDefault
 		);
 
 		try {
@@ -172,8 +172,8 @@ export class PDVController extends BaseController {
 		let pdv: IPDV;
 		const links = this.getLinksResources(
 			req,
-			this.resourceDefaults,
-			this.replacesDefault
+			PDVController.resourceDefaults,
+			PDVController.replacesDefault
 		);
 
 		try {
@@ -224,8 +224,8 @@ export class PDVController extends BaseController {
 		let pdv: IPDV;
 		const links = this.getLinksResources(
 			req,
-			this.resourceDefaults,
-			this.replacesDefault
+			PDVController.resourceDefaults,
+			PDVController.replacesDefault
 		);
 
 		try {

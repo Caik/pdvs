@@ -1,0 +1,64 @@
+version: '3'
+services:
+    api_sut:
+        build:
+            context: .
+            dockerfile: Dockerfile-api
+        image: 'zx-backend-challenge-api_sut:latest'
+        volumes:
+            - '.:${APP_DIRECTORY}'
+            - '${APP_DIRECTORY}/node_modules'
+        command:
+            - ./wait-for-it.sh
+            - 'db_test:${DB_TEST_CONTAINER_PORT}'
+            - '-t'
+            - '60'
+            - '--'
+            - npm
+            - run
+            - dev
+        environment:
+            - 'API_CONTAINER_PORT=${API_TEST_CONTAINER_PORT}'
+            - 'DB_CONTAINER_PORT=${DB_TEST_CONTAINER_PORT}'
+            - 'DB_DATABASE_NAME=${DB_TEST_DATABASE_NAME}'
+            - 'DB_CONTAINER_HOST=${DB_TEST_CONTAINER_HOST}'
+            - 'DB_FORCE_DROP_DATABASE=${DB_TEST_FORCE_DROP_DATABASE}'
+            - 'DATA_POPULATE=${DATA_TEST_POPULATE}'
+        restart: on-failure
+        networks:
+            - zx_test
+    api_test:
+        build:
+            context: .
+            dockerfile: Dockerfile-api
+        image: 'zx-backend-challenge-api_test:latest'
+        volumes:
+            - '.:${APP_DIRECTORY}'
+            - '${APP_DIRECTORY}/node_modules'
+        command:
+            - ./wait-for-it.sh
+            - 'api_sut:${API_TEST_CONTAINER_PORT}'
+            - '-t'
+            - '60'
+            - '--'
+            - npm
+            - test
+        environment:
+            - 'API_TEST_CONTAINER_PORT=${API_TEST_CONTAINER_PORT}'
+            - 'DB_CONTAINER_HOST=${DB_TEST_CONTAINER_HOST}'
+            - 'DB_CONTAINER_PORT=${DB_TEST_CONTAINER_PORT}'
+            - 'DB_DATABASE_NAME=${DB_TEST_DATABASE_NAME}'
+            - DATA_POPULATE=false
+        restart: on-failure
+        networks:
+            - zx_test
+    db_test:
+        build:
+            context: .
+            dockerfile: Dockerfile-db
+        image: 'zx-backend-challenge-db_test:latest'
+        networks:
+            - zx_test
+networks:
+    zx_test:
+        driver: bridge

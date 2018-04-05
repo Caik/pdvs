@@ -1,0 +1,1473 @@
+{
+	"info": {
+		"_postman_id": "72cdcef4-26da-488f-bcb0-4718754dbc4d",
+		"name": "ZX Ventures - Back-End challenge",
+		"description": "API to return and create PDVs (Ponto de Venda)",
+		"schema":
+			"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "pdv",
+			"description": "Folder for pdv",
+			"item": [
+				{
+					"name": "Get All PDVs",
+					"description": "",
+					"item": [
+						{
+							"name": "Get all PDVs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"2f79f0b6-09cb-42c8-81e4-a08f41121a48",
+										"type": "text/javascript",
+										"exec": [
+											"var coordinatesSchema = {",
+											"\ttitle: \"Coordinates\",",
+											"\ttype: \"array\",",
+											"\titens: \"number\",",
+											"\tminLength: 2,",
+											"\tmaxLenght: 2",
+											"};",
+											"",
+											"var coverageAreaSchema = {",
+											"\ttitle: \"Coverage Area\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\tminLength: 2,",
+											"\t\t\tmaxLength: 2,",
+											"\t\t\titems: {",
+											"\t\t\t\ttype: \"array\",",
+											"\t\t\t\tminLength: 1,",
+											"\t\t\t\tmaxLength: 1,",
+											"\t\t\t\titems: {",
+											"\t\t\t\t\ttype: \"array\",",
+											"\t\t\t\t\tminLength: 3,",
+											"\t\t\t\t\titems: coordinatesSchema",
+											"\t\t\t\t}",
+											"\t\t\t}",
+											"\t\t}",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var addressSchema = {",
+											"\ttitle: \"Address\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: coordinatesSchema",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var pdvSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tid: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\ttradingName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\townerName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tdocument: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoverageArea: coverageAreaSchema,",
+											"\t\taddress: addressSchema",
+											"\t},",
+											"\trequired: [",
+											"\t\t\"id\",",
+											"\t\t\"tradingName\",",
+											"\t\t\"ownerName\",",
+											"\t\t\"document\",",
+											"\t\t\"coverageArea\",",
+											"\t\t\"address\"",
+											"\t]",
+											"};",
+											"",
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var pdvListResponseSchema = {",
+											"\ttitle: \"PDV List\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\tqty: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\titens: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: pdvSchema",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"qty\", \"itens\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 200\", () => {",
+											"\tpm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status code is 200 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", function() {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", function() {",
+											"\tpm.expect(tv4.validate(pm.response.json(), pdvListResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id":
+											"afd35e43-09d3-49eb-98ca-a30f948323cc",
+										"type": "text/javascript",
+										"exec": [""]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv?offset={{offset}}&limit={{limit}}",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv"],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "{{limit}}"
+										}
+									]
+								},
+								"description": "Get all the PDVs"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all PDVs with limit",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"0133bbae-356c-468c-a4c5-ddc3c42b15ca",
+										"type": "text/javascript",
+										"exec": [
+											"var coordinatesSchema = {",
+											"\ttitle: \"Coordinates\",",
+											"\ttype: \"array\",",
+											"\titens: \"number\",",
+											"\tminLength: 2,",
+											"\tmaxLenght: 2",
+											"};",
+											"",
+											"var coverageAreaSchema = {",
+											"\ttitle: \"Coverage Area\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\tminLength: 2,",
+											"\t\t\tmaxLength: 2,",
+											"\t\t\titems: {",
+											"\t\t\t\ttype: \"array\",",
+											"\t\t\t\tminLength: 1,",
+											"\t\t\t\tmaxLength: 1,",
+											"\t\t\t\titems: {",
+											"\t\t\t\t\ttype: \"array\",",
+											"\t\t\t\t\tminLength: 3,",
+											"\t\t\t\t\titems: coordinatesSchema",
+											"\t\t\t\t}",
+											"\t\t\t}",
+											"\t\t}",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var addressSchema = {",
+											"\ttitle: \"Address\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: coordinatesSchema",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var pdvSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tid: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\ttradingName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\townerName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tdocument: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoverageArea: coverageAreaSchema,",
+											"\t\taddress: addressSchema",
+											"\t},",
+											"\trequired: [",
+											"\t\t\"id\",",
+											"\t\t\"tradingName\",",
+											"\t\t\"ownerName\",",
+											"\t\t\"document\",",
+											"\t\t\"coverageArea\",",
+											"\t\t\"address\"",
+											"\t]",
+											"};",
+											"",
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var pdvListResponseSchema = {",
+											"\ttitle: \"PDV List\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\tqty: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\titens: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: pdvSchema",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"qty\", \"itens\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 200\", () => {",
+											"\tpm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status code is 200 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Quantity of itens is correct\", () => {",
+											"\tpm.expect(pm.response.json().itens.length).to.be.equals(2);",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), pdvListResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id":
+											"bbb1f550-7693-4bdf-92a6-357e5f9468e8",
+										"type": "text/javascript",
+										"exec": [""]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv?offset={{offset}}&limit=2",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv"],
+									"query": [
+										{
+											"key": "offset",
+											"value": "{{offset}}"
+										},
+										{
+											"key": "limit",
+											"value": "2"
+										}
+									]
+								},
+								"description": "Get all PDVs with limit"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Get PDV",
+					"description": "",
+					"item": [
+						{
+							"name": "Find a PDV by Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"f4dc9f8e-6cff-4f68-8118-8f288905ff0f",
+										"type": "text/javascript",
+										"exec": [
+											"var coordinatesSchema = {",
+											"\ttitle: \"Coordinates\",",
+											"\ttype: \"array\",",
+											"\titens: \"number\",",
+											"\tminLength: 2,",
+											"\tmaxLenght: 2",
+											"};",
+											"",
+											"var coverageAreaSchema = {",
+											"\ttitle: \"Coverage Area\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\tminLength: 2,",
+											"\t\t\tmaxLength: 2,",
+											"\t\t\titems: {",
+											"\t\t\t\ttype: \"array\",",
+											"\t\t\t\tminLength: 1,",
+											"\t\t\t\tmaxLength: 1,",
+											"\t\t\t\titems: {",
+											"\t\t\t\t\ttype: \"array\",",
+											"\t\t\t\t\tminLength: 3,",
+											"\t\t\t\t\titems: coordinatesSchema",
+											"\t\t\t\t}",
+											"\t\t\t}",
+											"\t\t}",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var addressSchema = {",
+											"\ttitle: \"Address\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: coordinatesSchema",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var pdvSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tid: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\ttradingName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\townerName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tdocument: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoverageArea: coverageAreaSchema,",
+											"\t\taddress: addressSchema",
+											"\t},",
+											"\trequired: [",
+											"\t\t\"id\",",
+											"\t\t\"tradingName\",",
+											"\t\t\"ownerName\",",
+											"\t\t\"document\",",
+											"\t\t\"coverageArea\",",
+											"\t\t\"address\"",
+											"\t]",
+											"};",
+											"",
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var pdvResponseSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\titem: pdvSchema,",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"item\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 200\", () => {",
+											"\tpm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status code is 200 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), pdvResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "http://{{url}}/pdv/1",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv", "1"]
+								},
+								"description": "Returns a single PDV"
+							},
+							"response": []
+						},
+						{
+							"name": "Find a PDV by Id: Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"7ac73a0e-0585-4815-97b6-0c5d1f17ef36",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error404ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t    \ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 404\", () => {",
+											"\tpm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Status code is 404 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(404);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error404ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "http://{{url}}/pdv/12312321",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv", "12312321"]
+								},
+								"description": "Returns a 404 error"
+							},
+							"response": []
+						},
+						{
+							"name": "Find a PDV by Id: Input Invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"b2e9dd92-cb15-4a7f-b0a9-4b8b0ed2a38f",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error400ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 400\", () => {",
+											"\tpm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Status code is 400 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(400);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error400ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "http://{{url}}/pdv/xx",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv", "xx"]
+								},
+								"description": "Returns a 400 error"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Add PDV",
+					"description": "",
+					"item": [
+						{
+							"name": "Add a new PDV",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"787970f9-903c-4a23-a138-93cb43f4e896",
+										"type": "text/javascript",
+										"exec": [
+											"var coordinatesSchema = {",
+											"\ttitle: \"Coordinates\",",
+											"\ttype: \"array\",",
+											"\titens: \"number\",",
+											"\tminLength: 2,",
+											"\tmaxLenght: 2",
+											"};",
+											"",
+											"var coverageAreaSchema = {",
+											"\ttitle: \"Coverage Area\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\tminLength: 2,",
+											"\t\t\tmaxLength: 2,",
+											"\t\t\titems: {",
+											"\t\t\t\ttype: \"array\",",
+											"\t\t\t\tminLength: 1,",
+											"\t\t\t\tmaxLength: 1,",
+											"\t\t\t\titems: {",
+											"\t\t\t\t\ttype: \"array\",",
+											"\t\t\t\t\tminLength: 3,",
+											"\t\t\t\t\titems: coordinatesSchema",
+											"\t\t\t\t}",
+											"\t\t\t}",
+											"\t\t}",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var addressSchema = {",
+											"\ttitle: \"Address\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: coordinatesSchema",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var pdvSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tid: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\ttradingName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\townerName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tdocument: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoverageArea: coverageAreaSchema,",
+											"\t\taddress: addressSchema",
+											"\t},",
+											"\trequired: [",
+											"\t\t\"id\",",
+											"\t\t\"tradingName\",",
+											"\t\t\"ownerName\",",
+											"\t\t\"document\",",
+											"\t\t\"coverageArea\",",
+											"\t\t\"address\"",
+											"\t]",
+											"};",
+											"",
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var pdvResponseSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\titem: pdvSchema,",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"item\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 201\", () => {",
+											"\tpm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Status code is 201 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(201);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), pdvResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id":
+											"5736ce81-29ca-49ce-959a-71a8d9fbb6db",
+										"type": "text/javascript",
+										"exec": [
+											"function generateDocument() {",
+											"  var text = \"\";",
+											"  var possible = \"0123456789\";",
+											"",
+											"  for (var i = 0; i < 20; i++)",
+											"    text += possible.charAt(Math.floor(Math.random() * possible.length));",
+											"",
+											"  return text;",
+											"}",
+											"",
+											"postman.setEnvironmentVariable(\"document\", generateDocument());"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw":
+										"{\n\t\"id\": 1,\n\t\"tradingName\": \"Adega da Cerveja - Pinheiros\",\n\t\"ownerName\": \"Zé da Silva\",\n\t\"document\": {{document}},\n\t\"coverageArea\": {\n\t\t\"type\": \"MultiPolygon\",\n\t\t\"coordinates\": [\n\t\t\t[[[30, 20], [45, 40], [10, 40], [30, 20]]],\n\t\t\t[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]\n\t\t]\n\t},\n\t\"address\": {\n\t\t\"type\": \"Point\",\n\t\t\"coordinates\": [\"-46.57421\", \"-21.785741\"]\n\t}\n}\n"
+								},
+								"url": {
+									"raw": "http://{{url}}/pdv",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv"]
+								},
+								"description": "Add a new PDV, and return it"
+							},
+							"response": []
+						},
+						{
+							"name": "Add a new PDV: Invalid Input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"5cd62f63-17cc-428c-bf56-bfed23106bc5",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error400ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 400\", () => {",
+											"\tpm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Status code is 400 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(400);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error400ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw":
+										"{\n\t\"tradingName\": \"Adega da Cerveja - Pinheiros\",\n\t\"ownerName\": \"Zé da Silva\",\n\t\"coverageArea\": {\n\t\t\"type\": \"MultiPolygon\",\n\t\t\"coordinates\": [\n\t\t\t[[[30, 20], [45, 40], [10, 40], [30, 20]]],\n\t\t\t[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]\n\t\t]\n\t},\n\t\"address\": {\n\t\t\"type\": \"Point\",\n\t\t\"coordinates\": [\"-46.57421\", \"-21.785741\"]\n\t}\n}\n"
+								},
+								"url": {
+									"raw": "http://{{url}}/pdv",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv"]
+								},
+								"description": "Return a 400 error"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Search PDV",
+					"description": "",
+					"item": [
+						{
+							"name": "Search the nearest PDV",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"8a8aae0a-2eb2-4151-958f-e3065d94d7a0",
+										"type": "text/javascript",
+										"exec": [
+											"var coordinatesSchema = {",
+											"\ttitle: \"Coordinates\",",
+											"\ttype: \"array\",",
+											"\titens: \"number\",",
+											"\tminLength: 2,",
+											"\tmaxLenght: 2",
+											"};",
+											"",
+											"var coverageAreaSchema = {",
+											"\ttitle: \"Coverage Area\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\tminLength: 2,",
+											"\t\t\tmaxLength: 2,",
+											"\t\t\titems: {",
+											"\t\t\t\ttype: \"array\",",
+											"\t\t\t\tminLength: 1,",
+											"\t\t\t\tmaxLength: 1,",
+											"\t\t\t\titems: {",
+											"\t\t\t\t\ttype: \"array\",",
+											"\t\t\t\t\tminLength: 3,",
+											"\t\t\t\t\titems: coordinatesSchema",
+											"\t\t\t\t}",
+											"\t\t\t}",
+											"\t\t}",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var addressSchema = {",
+											"\ttitle: \"Address\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\ttype: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoordinates: coordinatesSchema",
+											"\t},",
+											"\trequired: []",
+											"};",
+											"",
+											"var pdvSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tid: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\ttradingName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\townerName: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tdocument: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tcoverageArea: coverageAreaSchema,",
+											"\t\taddress: addressSchema",
+											"\t},",
+											"\trequired: [",
+											"\t\t\"id\",",
+											"\t\t\"tradingName\",",
+											"\t\t\"ownerName\",",
+											"\t\t\"document\",",
+											"\t\t\"coverageArea\",",
+											"\t\t\"address\"",
+											"\t]",
+											"};",
+											"",
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var pdvResponseSchema = {",
+											"\ttitle: \"PDV\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\titem: pdvSchema,",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titens: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"item\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 200\", () => {",
+											"\tpm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Status code is 200 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), pdvResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv/-43.33061724901199,-22.96446381950397",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": [
+										"pdv",
+										"-43.33061724901199,-22.96446381950397"
+									]
+								},
+								"description": "Returns a single PDV (if exist)"
+							},
+							"response": []
+						},
+						{
+							"name": "Search the nearest PDV: Not Found",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"5995eaa8-1e21-4ef2-b192-0697cbd5dab1",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error404ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t    \ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 404\", () => {",
+											"\tpm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Status code is 404 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(404);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error404ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv/-43.33061724901199,22.96446381950397",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": [
+										"pdv",
+										"-43.33061724901199,22.96446381950397"
+									]
+								},
+								"description": "Returns a 404 error"
+							},
+							"response": []
+						},
+						{
+							"name": "Search the nearest PDV: Input Invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"0335e95e-cc42-4398-b4a1-7d2540e71186",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error400ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 400\", () => {",
+											"\tpm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Status code is 400 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(400);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error400ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv/-43.33061724901199,",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv", "-43.33061724901199,"]
+								},
+								"description": "Returns a 400 error"
+							},
+							"response": []
+						},
+						{
+							"name": "Search the nearest PDV: Input Invalid 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id":
+											"0335e95e-cc42-4398-b4a1-7d2540e71186",
+										"type": "text/javascript",
+										"exec": [
+											"var linkSchema = {",
+											"\ttitle: \"Link\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\trel: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\thref: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmethod: {",
+											"\t\t\tenum: [\"GET\", \"POST\"]",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"rel\", \"href\", \"method\"]",
+											"};",
+											"",
+											"var error400ResponseSchema = {",
+											"\ttitle: \"Error Response\",",
+											"\ttype: \"object\",",
+											"\tproperties: {",
+											"\t\tstatusCode: {",
+											"\t\t\ttype: \"integer\"",
+											"\t\t},",
+											"\t\terror: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tmessage: {",
+											"\t\t\ttype: \"string\"",
+											"\t\t},",
+											"\t\tlinks: {",
+											"\t\t\ttype: \"array\",",
+											"\t\t\titems: linkSchema",
+											"\t\t}",
+											"\t},",
+											"\trequired: [\"statusCode\", \"error\", \"message\", \"links\"]",
+											"};",
+											"",
+											"pm.test(\"Status code is 400\", () => {",
+											"\tpm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Status code is 400 on body response\", () => {",
+											"\tpm.expect(pm.response.json().statusCode).to.be.equals(400);",
+											"});",
+											"",
+											"pm.test(\"Content-Type is present\", () => {",
+											"\tpm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Schema is valid\", () => {",
+											"\tpm.expect(tv4.validate(pm.response.json(), error400ResponseSchema)).to.be.true;",
+											"});",
+											""
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw":
+										"http://{{url}}/pdv/190,-43.33061724901199",
+									"protocol": "http",
+									"host": ["{{url}}"],
+									"path": ["pdv", "190,-43.33061724901199"]
+								},
+								"description": "Returns a 400 error"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4f8f6384-f4dc-4b12-9912-0a0b9911e3a3",
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "394a43ea-f829-4570-bd46-1811b1899e06",
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	]
+}

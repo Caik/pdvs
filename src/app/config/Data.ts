@@ -22,8 +22,12 @@ async function populate(): Promise<void> {
 
 			pdvModel
 				.insertMany(data)
-				.then(sucess => console.log("Database populated successfully"))
-				.catch(error => console.log(error));
+				.then(sucess =>
+					console.log(
+						`Database populated successfully: ${data.length} itens`
+					)
+				)
+				.catch(error => console.error(error));
 		});
 	}
 }

@@ -24,7 +24,8 @@ export class ResourcesRegistry {
 
 	public static getResourceAsLink(
 		name: string,
-		req: Request
+		req: Request,
+		replaces?: Array<[string, string]>
 	): ILink | undefined {
 		const resource = ResourcesRegistry.getResource(name);
 
@@ -32,7 +33,7 @@ export class ResourcesRegistry {
 			return;
 		}
 
-		return resource.getLink(req);
+		return resource.getLink(req, replaces);
 	}
 
 	public static getResources(): Resource[] {

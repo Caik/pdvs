@@ -20,10 +20,11 @@ services:
         environment:
             - 'API_CONTAINER_PORT=${API_CONTAINER_PORT}'
             - 'DB_CONTAINER_PORT=${DB_CONTAINER_PORT}'
-            - 'DB_DATABASE=${DB_DATABASE_NAME}'
+            - 'DB_DATABASE_NAME=${DB_DATABASE_NAME}'
             - 'DATA_POPULATE=${DATA_POPULATE}'
-        links:
-            - db
+            - 'DB_CONTAINER_HOST=${DB_CONTAINER_HOST}'
+            - 'DB_FORCE_DROP_DATABASE=${DB_FORCE_DROP_DATABASE}'
+        restart: on-failure
         networks:
             - zx
     doc:
@@ -42,6 +43,7 @@ services:
             - doc
         environment:
             - 'DOC_CONTAINER_PORT=${DOC_CONTAINER_PORT}'
+        restart: on-failure
         networks:
             - zx
     db:

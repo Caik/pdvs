@@ -14,11 +14,15 @@ export class PDVService {
 		let realOffset: number;
 		let realLimit: number;
 
-		if (offset !== undefined && offset.match(/^[0-9]+$/)) {
+		if (
+			offset !== undefined &&
+			offset !== null &&
+			offset.match(/^[0-9]+$/)
+		) {
 			realOffset = parseInt(offset, 10);
 		}
 
-		if (limit !== undefined && limit.match(/^[0-9]+$/)) {
+		if (limit !== undefined && limit !== null && limit.match(/^[0-9]+$/)) {
 			realLimit = parseInt(limit, 10);
 		}
 
@@ -34,6 +38,10 @@ export class PDVService {
 	public static async getPDV(id: string): Promise<IPDV> {
 		let isObjectId: boolean = false;
 		let pdv: IPDV;
+
+		if (id === undefined || id === null) {
+			throw new InvalidInputError(["id"], 400);
+		}
 
 		if (id.length === 24) {
 			isObjectId = true;
