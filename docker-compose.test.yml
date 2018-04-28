@@ -26,7 +26,7 @@ services:
             - 'DATA_POPULATE=${DATA_TEST_POPULATE}'
         restart: on-failure
         networks:
-            - zx_test
+            - pdv_test
         logging:
             driver: none
     api_test:
@@ -53,16 +53,16 @@ services:
             - DATA_POPULATE=false
         restart: on-failure
         networks:
-            - zx_test
+            - pdv_test
     db_test:
         build:
             context: .
             dockerfile: Dockerfile-db
-        image: 'zx-backend-challenge-db_test:latest'
+        image: 'pdv-db_test:latest'
         networks:
-            - zx_test
+            - pdv_test
         logging:
             driver: none
 networks:
-    zx_test:
+    pdv_test:
         driver: bridge

@@ -1,7 +1,7 @@
 {
-	"name": "backend-challenge",
+	"name": "pdvs",
 	"version": "1.0.0",
-	"description": "ZX Ventures - Back-end Challenge",
+	"description": "PDVs",
 	"main": "dist/server.js",
 	"scripts": {
 		"test": "gulp test",

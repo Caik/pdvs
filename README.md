@@ -1,8 +1,4 @@
-# ZX Ventures Back-End Challenge
-
-## Link do vídeo apresentando a aplicação desenvolvida
-
-*   https://youtu.be/ttel8U3Xfmw
+# PDVs
 
 ## Pré-requisitos:
 

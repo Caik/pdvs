@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "72cdcef4-26da-488f-bcb0-4718754dbc4d",
-		"name": "ZX Ventures - Back-End challenge",
+		"name": "PDVs",
 		"description": "API to return and create PDVs (Ponto de Venda)",
 		"schema":
 			"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"

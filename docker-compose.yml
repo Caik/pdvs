@@ -4,7 +4,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-api
-        image: 'zx-backend-challenge-api_dev:latest'
+        image: 'pdv-api_dev:latest'
         volumes:
             - '.:${APP_DIRECTORY}'
             - '${APP_DIRECTORY}/node_modules'
@@ -26,12 +26,12 @@ services:
             - 'DB_FORCE_DROP_DATABASE=${DB_FORCE_DROP_DATABASE}'
         restart: on-failure
         networks:
-            - zx_dev
+            - pdv_dev
     doc_dev:
         build:
             context: .
             dockerfile: Dockerfile-doc
-        image: 'zx-backend-challenge-doc_dev:latest'
+        image: 'pdv-doc_dev:latest'
         volumes:
             - './docs:${APP_DIRECTORY}/docs'
             - '${APP_DIRECTORY}/node_modules'
@@ -45,21 +45,21 @@ services:
             - 'DOC_CONTAINER_PORT=${DOC_CONTAINER_PORT}'
         restart: on-failure
         networks:
-            - zx_dev
+            - pdv_dev
     db_dev:
         build:
             context: .
             dockerfile: Dockerfile-db
-        image: 'zx-backend-challenge-db_dev:latest'
+        image: 'pdv-db_dev:latest'
         volumes:
             - 'db-data_dev:/data/db'
         ports:
             - '${DB_LOCAL_PORT}:${DB_CONTAINER_PORT}'
         restart: on-failure
         networks:
-            - zx_dev
+            - pdv_dev
 volumes:
     db-data_dev: null
 networks:
-    zx_dev:
+    pdv_dev:
         driver: bridge
